@@ -9,7 +9,7 @@
                     <h3 class="text-black fw-700 fs-30  ">Projects List</h3>
                     <p class="fw-400 text-black fs-15 mb-2">All the Lorem Ipsum generators on the Internet tend to repeat.</p>
                     <div class="input-group mb-3 mt-5">
-                        <form  action="" method="GET" class="w-100">
+                        <form action="" method="GET" class="w-100">
                             <input type="text" class="form-control position-relative z-0" placeholder="{{ translate('Search Keyword') }}" value="{{ $keyword }}" name="keyword" aria-label="Search" aria-describedby="searchButton" style="height: 60px;">
                             <div class="input-group-append position-absolute" style="position:absolute;top: 5px;right: 9px;padding: 3px 0;">
                                 <button class="btn btn-primary" type="submit" id="searchButton" data-toggle="class-toggle" data-target=".aiz-filter-sidebar">
@@ -58,13 +58,18 @@
                                 </button>
                             </div>
 
+                            <!-- @foreach($categories as $category)
+                            <span id="category_{{$category->id}}" class=" btn btn-light btn-xs mb-1 ml-1 bg-soft-info-light rounded-2 border-0 ">
+                                {{$category ->name}} |<p onclick="removeCategory({{$category->id}})" class="m-0  d-inline fw-700">
+                                    X</p>
+                            </span>
+                            @endforeach -->
                             @foreach($categories as $category)
-
-                                    <span id="category_{{$category->id}}" class=" btn btn-light btn-xs mb-1 ml-1 bg-soft-info-light rounded-2 border-0 ">
-                                        {{$category ->name}} |<p onclick="removeLevel({{$category->id}})" class="m-0  d-inline fw-700">
-                                            X</p>
-                                    </span>
-                                    @endforeach
+                            <span id="category_{{$category->id}}" class="btn btn-light btn-xs mb-1 ml-1 bg-soft-info-light rounded-2 border-0">
+                                {{$category->name}} |
+                                <p onclick="removeCategory({{$category->id}})" class="m-0 d-inline fw-700">X</p>
+                            </span>
+                            @endforeach
                             <div class="card-body pl-lg-0">
 
 
@@ -86,7 +91,7 @@
 
                                         @foreach(\App\Models\ProjectCategory::all() as $category)
                                         <label class="aiz-checkbox w-100">
-                                            <input type="checkbox" name="category_id[]" onchange="applyFilter()" value="{{ $category->slug }}" @if (in_array($category->slug,$category_ids)) checked @endif >
+                                            <input type="checkbox" name="category_id[]" onchange="applyFilter()" value="{{ $category->id }}" @if (in_array($category->id,$category_ids)) checked @endif >
                                             {{$category->name}}
                                             <span class="aiz-square-check"></span>
                                             <span class="float-right text-secondary fs-lg-16 fs-14"></span>
@@ -102,7 +107,7 @@
                                     <!-- Fixed Price Projects -->
                                     <div class="aiz-checkbox-list">
                                         <label class="aiz-checkbox">
-                                            <input type="checkbox" name="projectType[]" value="Fixed"> {{ translate('Fixed Price Projects') }}
+                                            <input type="checkbox" name="projectPrice[]" value="Fixed" @if (in_array('Fixed', $projectType)) checked @endif onchange="applyFilter()"> {{ translate('Fixed Price Projects') }}
                                             <span class="aiz-square-check"></span>
                                             <span class="float-right text-secondary fs-12"></span>
                                         </label>
@@ -420,7 +425,42 @@
         </form>
     </div>
 </section>
+<!-- <script>
+    function removeCategory(categoryId) {
+        var categoryElement = document.getElementById('category_' + categoryId);
+
+        if (categoryElement) {
+            categoryElement.parentNode.removeChild(categoryElement);
+
+            // Uncheck the corresponding checkbox
+            var checkbox = document.querySelector('input[name="category_id[]"][value="' + categoryId + '"]');
+            if (checkbox) {
+                checkbox.checked = false;
+            }
+        }
+        $('#project-filter-form').submit();
+    }
+</script> -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function removeCategory(categoryId) {
+        var categoryElement = document.getElementById('category_' + categoryId);
+
+        if (categoryElement) {
+            categoryElement.parentNode.removeChild(categoryElement);
+
+            // Uncheck the corresponding checkbox
+            var checkbox = document.querySelector('input[name="category_id[]"][value="' + categoryId + '"]');
+            if (checkbox) {
+                checkbox.checked = false;
+            }
+        }
+        $('#project-filter-form').submit();
+    }
+</script>
+
 @endsection
+
 
 @section('script')
 <script type="text/javascript">
